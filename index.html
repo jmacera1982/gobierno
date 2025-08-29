@@ -64,6 +64,36 @@
             font-weight: 400;
         }
 
+        .nav-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+        }
+
         .content {
             padding: 40px;
         }
@@ -893,6 +923,52 @@
             transform: scale(1.1);
         }
 
+        /* Estilos para el modal de videollamada */
+        .video-call-container {
+            text-align: center;
+        }
+
+        .video-call-container h3 {
+            color: #863DFF;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .video-call-frame {
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-call-frame iframe {
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        .video-call-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn-secondary {
+            background-color: #6b7280;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #4b5563;
+            transform: translateY(-1px);
+        }
+
         .titulo {
             text-align: center;
             color: #863DFF;
@@ -989,6 +1065,12 @@
             background-color: #7c3aed !important;
             transform: translateY(-2px) !important;
             box-shadow: 0 8px 25px rgba(134, 61, 255, 0.3) !important;
+        }
+
+        .btn-primary.inline-block {
+            display: inline-block !important;
+            text-decoration: none !important;
+            margin-top: 0.5rem !important;
         }
 
         .btn-secondary {
@@ -1497,6 +1579,8 @@
         .spin {
             animation: spin 1s linear infinite;
         }
+
+
     </style>
 </head>
 <body>
@@ -1506,6 +1590,13 @@
         <div class="header">
             <h1>Evaluación Psicológica Complementaria</h1>
             <p>Sistema de evaluación con validación biométrica</p>
+            
+            <div class="nav-buttons">
+                <a href="admin.html" class="nav-btn">
+                    <i class="bi bi-gear-fill"></i>
+                    Administrar Preguntas
+                </a>
+            </div>
         </div>
 
         <div class="content">
@@ -1724,7 +1815,7 @@
             
             <div id="telemedicineMessage" class="hidden p-4 rounded-lg mb-4"></div>
             
-            <div id="telemedicineForm" class="space-y-4">
+            <form id="telemedicineForm" class="space-y-4">
                 <!-- Primera fila: Nombre y Apellido -->
                 <div class="form-row">
                     <div class="form-col">
@@ -1768,7 +1859,7 @@
                         Iniciar Videollamada
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 
@@ -2427,7 +2518,7 @@
             console.log('✅ Modal de telemedicina cerrado correctamente');
         }
 
-        function reservarTelemedicina() {
+        async function reservarTelemedicina() {
             const firstName = document.querySelector('#telemedicineForm input[name="firstName"]').value;
             const lastName = document.querySelector('#telemedicineForm input[name="lastName"]').value;
             const dni = document.querySelector('#telemedicineForm input[name="dni"]').value;
@@ -2440,14 +2531,146 @@
                 return;
             }
 
-            // Aquí iría la lógica para enviar el formulario a un backend
-            // Por ahora, simulamos un éxito
-            document.getElementById('telemedicineMessage').textContent = `¡Videollamada agendada con éxito para ${firstName} ${lastName}!`;
-            document.getElementById('telemedicineMessage').classList.remove('hidden');
-            document.getElementById('telemedicineModal').classList.remove('active');
-            setTimeout(() => {
-                document.getElementById('telemedicineMessage').classList.add('hidden');
-            }, 5000);
+            // Mostrar estado de carga
+            const submitBtn = document.getElementById('telemedicineSubmitBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Iniciando...';
+            submitBtn.disabled = true;
+
+            // Limpiar mensajes previos
+            document.getElementById('telemedicineMessage').textContent = '';
+            document.getElementById('telemedicineMessage').classList.add('hidden');
+
+            try {
+                console.log('🚀 Iniciando videollamada - Enviando solicitud al API...');
+                
+                // ID de cola para telemedicina (basado en el código de referencia)
+                const queueId = '6653'; // Cola de Telemedicina
+                console.log('Usando ID de cola para telemedicina:', queueId);
+                
+                const data = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    dni: dni,
+                    email: email,
+                    phone: phone
+                };
+
+                console.log('Datos del formulario:', data);
+
+                const response = await fetch(`https://filavirtual2.debmedia.com/api/v1/queue/${queueId}/branch/10387/enqueue`, {
+                    method: 'POST',
+                    headers: {
+                        'x-api-token': 'bLb0B67zB43NwgaM2EaDrQk1PTPcbl5JB2UFV6S3',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                console.log('Respuesta del API:', response.status, response.ok);
+                console.log('URL de la respuesta:', response.url);
+
+                if (response.ok) {
+                    const responseData = await response.json();
+                    console.log('Datos del API recibidos:', responseData);
+                    
+                    // Extraer información del turno
+                    let turnInfo = {
+                        turno: 'N/A',
+                        tiempoEspera: 'N/A',
+                        especialidad: 'Telemedicina',
+                        salaEspera: 'Sala Virtual',
+                        codigo: responseData.code || 'N/A',
+                        videoCallUrl: null
+                    };
+                    
+                    // Buscar URL de videollamada en diferentes ubicaciones de la respuesta
+                    if (responseData.videoCallUrl) {
+                        turnInfo.videoCallUrl = responseData.videoCallUrl;
+                        console.log('✅ URL de videollamada encontrada:', responseData.videoCallUrl);
+                    } else if (responseData.jsonDetails?.videoCallUrl) {
+                        turnInfo.videoCallUrl = responseData.jsonDetails.videoCallUrl;
+                        console.log('✅ URL de videollamada encontrada en jsonDetails:', responseData.jsonDetails.videoCallUrl);
+                    } else if (responseData.jsonDetails?.queue?.videoCallUrl) {
+                        turnInfo.videoCallUrl = responseData.jsonDetails.queue.videoCallUrl;
+                        console.log('✅ URL de videollamada encontrada en queue:', responseData.jsonDetails.queue.videoCallUrl);
+                    } else {
+                        console.log('ℹ️ No se encontró URL de videollamada en el response');
+                    }
+                    
+                    // Extraer datos del turno
+                    if (responseData.jsonDetails) {
+                        turnInfo.turno = responseData.jsonDetails.actualTurn || responseData.jsonDetails.turn || 'N/A';
+                        turnInfo.tiempoEspera = responseData.jsonDetails.averageWaitingTime || responseData.jsonDetails.serviceTime || 'N/A';
+                        turnInfo.especialidad = responseData.jsonDetails.queue?.name || 'Telemedicina';
+                        turnInfo.salaEspera = responseData.jsonDetails.waitingRoom?.name || 'Sala Virtual';
+                    } else if (responseData.code) {
+                        turnInfo.turno = responseData.code || 'N/A';
+                        turnInfo.tiempoEspera = 'A calcular';
+                        turnInfo.especialidad = 'Telemedicina';
+                        turnInfo.salaEspera = 'Sala Virtual';
+                    }
+                    
+                    console.log('Información del turno extraída:', turnInfo);
+                    
+                    // Guardar el código del turno en localStorage
+                    if (responseData.code) {
+                        localStorage.setItem('telemedicineTurnCode', responseData.code);
+                    }
+                    
+                    // Mostrar mensaje de éxito sin información del turno
+                    let successMessage = `¡En Breve lo atenderemos!<br><br>`;
+                    
+                    if (turnInfo.videoCallUrl) {
+                        const videoCallUrlWithParam = turnInfo.videoCallUrl.includes('?') 
+                            ? `${turnInfo.videoCallUrl}&videocallUser=mobile` 
+                            : `${turnInfo.videoCallUrl}?videocallUser=mobile`;
+                        successMessage += `<br><a href="#" onclick="openVideoCallInModal('${videoCallUrlWithParam}')" class="btn-primary inline-block">🔗 Acceder a Videollamada</a>`;
+                    }
+                    
+                    document.getElementById('telemedicineMessage').innerHTML = successMessage;
+                    document.getElementById('telemedicineMessage').classList.remove('hidden');
+                    document.getElementById('telemedicineMessage').classList.add('bg-green-100', 'text-green-700', 'border-green-400');
+                    
+                    // Ocultar todos los formularios cuando aparece el botón de videollamada
+                    document.getElementById('telemedicineForm').style.display = 'none';
+                    document.getElementById('formularioDatos').style.display = 'none';
+                    
+                    // Cerrar modal después de 8 segundos
+                    setTimeout(() => {
+                        document.getElementById('telemedicineModal').classList.remove('active');
+                        setTimeout(() => {
+                            document.getElementById('telemedicineMessage').classList.add('hidden');
+                        }, 1000);
+                    }, 8000);
+                    
+                    console.log('✅ VIDEOTURNO GENERADO EXITOSAMENTE:', turnInfo);
+                    
+                } else {
+                    throw new Error('Error en la respuesta del servidor: ' + response.status);
+                }
+                
+            } catch (error) {
+                console.error('Error durante la reserva de videollamada:', error);
+                
+                let errorMessage = 'Error al iniciar la videollamada: ';
+                if (error.message.includes('fetch')) {
+                    errorMessage += 'Error de conexión. Verifique su conexión a internet.';
+                } else {
+                    errorMessage += error.message;
+                }
+                
+                document.getElementById('telemedicineMessage').textContent = errorMessage;
+                document.getElementById('telemedicineMessage').classList.remove('hidden');
+                document.getElementById('telemedicineMessage').classList.remove('bg-green-100', 'text-green-700', 'border-green-400');
+                document.getElementById('telemedicineMessage').classList.add('bg-red-100', 'text-red-700', 'border-red-400');
+                
+            } finally {
+                // Restaurar botón
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                console.log('=== FIN DE RESERVA DE VIDEOTURNO ===');
+            }
         }
 
         function showTurnInfoModal(message) {
@@ -2466,6 +2689,23 @@
 
         function hideVideoCallModal() {
             document.getElementById('videoCallModal').classList.remove('active');
+        }
+
+        function openVideoCallInModal(videoCallUrl) {
+            // Crear contenido del modal con iframe para la videollamada
+            const modalContent = `
+                <div class="video-call-container">
+                    <h3>Videollamada</h3>
+                    <div class="video-call-frame">
+                        <iframe src="${videoCallUrl}" width="100%" height="600" frameborder="0" allow="camera; microphone; fullscreen"></iframe>
+                    </div>
+                    <div class="video-call-actions">
+                        <button onclick="hideVideoCallModal()" class="btn-secondary">Cerrar</button>
+                    </div>
+                </div>
+            `;
+            
+            showVideoCallModal(modalContent);
         }
 
         // Función para cargar los combos desde la API (con especialidad configurable)
@@ -3155,6 +3395,246 @@
             alert('Prueba de manejo agendada exitosamente. Te enviaremos un email de confirmación.');
             hideAppointmentModal();
         }
+
+        // ========================================
+        // ADMINISTRACIÓN DE PREGUNTAS
+        // ========================================
+
+        // Función para mostrar el modal de administración
+        function showAdminModal() {
+            document.getElementById('adminModal').classList.add('active');
+            loadQuestionsToAdmin();
+        }
+
+        // Función para ocultar el modal de administración
+        function hideAdminModal() {
+            document.getElementById('adminModal').classList.remove('active');
+            document.getElementById('adminForm').reset();
+            document.getElementById('adminMessage').classList.add('hidden');
+        }
+
+        // Función para cargar las preguntas en la tabla de administración
+        function loadQuestionsToAdmin() {
+            const tbody = document.getElementById('adminQuestionsTable');
+            tbody.innerHTML = '';
+            
+            allQuestions.forEach((question, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${question.id}</td>
+                    <td>${question.title}</td>
+                    <td>${question.question.length > 50 ? question.question.substring(0, 50) + '...' : question.question}</td>
+                    <td>${question.options.length} opciones</td>
+                    <td>${question.correctAnswer + 1}</td>
+                    <td>
+                        <button onclick="editQuestion(${index})" class="btn-edit" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button onclick="deleteQuestion(${index})" class="btn-delete" title="Eliminar">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Función para editar una pregunta
+        function editQuestion(index) {
+            const question = allQuestions[index];
+            
+            document.getElementById('questionId').value = question.id;
+            document.getElementById('questionTitle').value = question.title;
+            document.getElementById('questionText').value = question.question;
+            document.getElementById('option1').value = question.options[0];
+            document.getElementById('option2').value = question.options[1];
+            document.getElementById('option3').value = question.options[2];
+            document.getElementById('option4').value = question.options[3];
+            document.getElementById('correctAnswer').value = question.correctAnswer;
+            
+            document.getElementById('adminFormTitle').textContent = 'Editar Pregunta';
+            document.getElementById('adminSubmitBtn').textContent = 'Actualizar Pregunta';
+            document.getElementById('adminSubmitBtn').onclick = () => updateQuestion(index);
+            
+            // Mostrar el formulario
+            document.getElementById('adminFormContainer').style.display = 'block';
+            document.getElementById('adminQuestionsContainer').style.display = 'none';
+        }
+
+        // Función para actualizar una pregunta existente
+        function updateQuestion(index) {
+            const questionData = getQuestionFormData();
+            
+            if (validateQuestionForm(questionData)) {
+                allQuestions[index] = questionData;
+                saveQuestionsToLocalStorage();
+                showAdminMessage('Pregunta actualizada exitosamente', 'success');
+                loadQuestionsToAdmin();
+                resetAdminForm();
+            }
+        }
+
+        // Función para eliminar una pregunta
+        function deleteQuestion(index) {
+            if (confirm('¿Está seguro de que desea eliminar esta pregunta?')) {
+                allQuestions.splice(index, 1);
+                saveQuestionsToLocalStorage();
+                showAdminMessage('Pregunta eliminada exitosamente', 'success');
+                loadQuestionsToAdmin();
+            }
+        }
+
+        // Función para crear una nueva pregunta
+        function createNewQuestion() {
+            document.getElementById('adminFormTitle').textContent = 'Nueva Pregunta';
+            document.getElementById('adminSubmitBtn').textContent = 'Crear Pregunta';
+            document.getElementById('adminSubmitBtn').onclick = saveNewQuestion;
+            
+            document.getElementById('adminForm').reset();
+            document.getElementById('questionId').value = allQuestions.length > 0 ? Math.max(...allQuestions.map(q => q.id)) + 1 : 1;
+            
+            // Mostrar el formulario
+            document.getElementById('adminFormContainer').style.display = 'block';
+            document.getElementById('adminQuestionsContainer').style.display = 'none';
+        }
+
+        // Función para guardar una nueva pregunta
+        function saveNewQuestion() {
+            const questionData = getQuestionFormData();
+            
+            if (validateQuestionForm(questionData)) {
+                allQuestions.push(questionData);
+                saveQuestionsToLocalStorage();
+                showAdminMessage('Pregunta creada exitosamente', 'success');
+                loadQuestionsToAdmin();
+                resetAdminForm();
+            }
+        }
+
+        // Función para obtener los datos del formulario
+        function getQuestionFormData() {
+            return {
+                id: parseInt(document.getElementById('questionId').value),
+                title: document.getElementById('questionTitle').value,
+                question: document.getElementById('questionText').value,
+                options: [
+                    document.getElementById('option1').value,
+                    document.getElementById('option2').value,
+                    document.getElementById('option3').value,
+                    document.getElementById('option4').value
+                ],
+                correctAnswer: parseInt(document.getElementById('correctAnswer').value)
+            };
+        }
+
+        // Función para validar el formulario
+        function validateQuestionForm(data) {
+            if (!data.title.trim()) {
+                showAdminMessage('El título es obligatorio', 'error');
+                return false;
+            }
+            
+            if (!data.question.trim()) {
+                showAdminMessage('La pregunta es obligatoria', 'error');
+                return false;
+            }
+            
+            if (data.options.some(option => !option.trim())) {
+                showAdminMessage('Todas las opciones son obligatorias', 'error');
+                return false;
+            }
+            
+            if (data.correctAnswer < 0 || data.correctAnswer > 3) {
+                showAdminMessage('La respuesta correcta debe ser un número del 1 al 4', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Función para mostrar mensajes en el admin
+        function showAdminMessage(message, type) {
+            const messageElement = document.getElementById('adminMessage');
+            messageElement.textContent = message;
+            messageElement.className = `admin-message ${type}`;
+            messageElement.classList.remove('hidden');
+            
+            setTimeout(() => {
+                messageElement.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Función para resetear el formulario de admin
+        function resetAdminForm() {
+            document.getElementById('adminForm').reset();
+            document.getElementById('adminFormContainer').style.display = 'none';
+            document.getElementById('adminQuestionsContainer').style.display = 'block';
+        }
+
+        // Función para guardar preguntas en localStorage
+        function saveQuestionsToLocalStorage() {
+            localStorage.setItem('numiaQuestions', JSON.stringify(allQuestions));
+            console.log('💾 Preguntas guardadas en localStorage:', allQuestions);
+        }
+
+        // Función para cargar preguntas desde localStorage
+        function loadQuestionsFromLocalStorage() {
+            const saved = localStorage.getItem('numiaQuestions');
+            if (saved) {
+                allQuestions = JSON.parse(saved);
+                console.log('📂 Preguntas cargadas desde localStorage:', allQuestions);
+            }
+        }
+
+        // Función para exportar preguntas a JSON
+        function exportQuestions() {
+            const dataStr = JSON.stringify(allQuestions, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `preguntas_numia_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Función para importar preguntas desde JSON
+        function importQuestions() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const importedQuestions = JSON.parse(e.target.result);
+                            if (Array.isArray(importedQuestions) && importedQuestions.length > 0) {
+                                allQuestions = importedQuestions;
+                                saveQuestionsToLocalStorage();
+                                loadQuestionsToAdmin();
+                                showAdminMessage('Preguntas importadas exitosamente', 'success');
+                            } else {
+                                showAdminMessage('El archivo no contiene preguntas válidas', 'error');
+                            }
+                        } catch (error) {
+                            showAdminMessage('Error al leer el archivo JSON', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        // Cargar preguntas al iniciar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadQuestionsFromLocalStorage();
+        });
     </script>
+
+
+
 </body>
 </html>

@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Preguntas - Gobierno Numia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #863DFF 0%, #a366ff 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .nav-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        /* ========================================
+           ESTILOS PARA ADMINISTRACIÓN DE PREGUNTAS
+           ======================================== */
+        
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-actions button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: #863DFF;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(134, 61, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .admin-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .admin-message.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .admin-message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .admin-message.hidden {
+            display: none;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #adminQuestionsTable {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #adminQuestionsTable th,
+        #adminQuestionsTable td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        #adminQuestionsTable th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        #adminQuestionsTable tr:hover {
+            background: #f9fafb;
+        }
+
+        .btn-edit,
+        .btn-delete {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 0.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #2563eb;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+
+        .admin-form {
+            background: #f9fafb;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .admin-form h3 {
+            color: #374151;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #863DFF;
+            box-shadow: 0 0 0 3px rgba(134, 61, 255, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .form-actions button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .form-actions .btn-primary {
+            background: #863DFF;
+            color: white;
+        }
+
+        .form-actions .btn-primary:hover {
+            background: #7c3aed;
+        }
+
+        .form-actions .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .form-actions .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            border: 2px solid #e0e7ff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #863DFF;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .section-title {
+            color: #374151;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .admin-actions {
+                flex-direction: column;
+            }
+            
+            .admin-actions button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        
+        <div class="header">
+            <h1>Administración de Preguntas</h1>
+            <p>Sistema de gestión para la evaluación psicológica complementaria</p>
+            
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-btn">
+                    <i class="bi bi-arrow-left"></i>
+                    Volver a Evaluación
+                </a>
+                <a href="#" class="nav-btn" onclick="window.print()">
+                    <i class="bi bi-printer"></i>
+                    Imprimir
+                </a>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Estadísticas -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalQuestions">0</div>
+                    <div class="stat-label">Total de Preguntas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="activeQuestions">0</div>
+                    <div class="stat-label">Preguntas Activas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="lastUpdated">-</div>
+                    <div class="stat-label">Última Actualización</div>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="admin-actions">
+                <button onclick="createNewQuestion()" class="btn-primary">
+                    <i class="bi bi-plus-lg"></i> Nueva Pregunta
+                </button>
+                <button onclick="exportQuestions()" class="btn-secondary">
+                    <i class="bi bi-download"></i> Exportar JSON
+                </button>
+                <button onclick="importQuestions()" class="btn-secondary">
+                    <i class="bi bi-upload"></i> Importar JSON
+                </button>
+                <button onclick="loadQuestionsFromLocalStorage()" class="btn-secondary">
+                    <i class="bi bi-arrow-clockwise"></i> Recargar
+                </button>
+            </div>
+
+            <!-- Mensajes -->
+            <div id="adminMessage" class="admin-message hidden"></div>
+
+            <!-- Contenedor de la tabla -->
+            <div id="adminQuestionsContainer">
+                <h3 class="section-title">Preguntas Existentes</h3>
+                <div class="table-container">
+                    <table id="adminQuestionsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Título</th>
+                                <th>Pregunta</th>
+                                <th>Opciones</th>
+                                <th>Respuesta Correcta</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Las preguntas se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Formulario de pregunta -->
+            <div id="adminFormContainer" style="display: none;">
+                <h3 id="adminFormTitle" class="section-title">Nueva Pregunta</h3>
+                <form id="adminForm" class="admin-form">
+                    <div class="form-group">
+                        <label for="questionId">ID:</label>
+                        <input type="number" id="questionId" required min="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="questionTitle">Título:</label>
+                        <input type="text" id="questionTitle" required placeholder="Ej: Reconocimiento de señales">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="questionText">Pregunta:</label>
+                        <textarea id="questionText" required placeholder="Ej: ¿Qué indica esta señal 🚫🚗?" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="option1">Opción 1:</label>
+                        <input type="text" id="option1" required placeholder="Primera opción">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="option2">Opción 2:</label>
+                        <input type="text" id="option2" required placeholder="Segunda opción">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="option3">Opción 3:</label>
+                        <input type="text" id="option3" required placeholder="Tercera opción">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="option4">Opción 4:</label>
+                        <input type="text" id="option4" required placeholder="Cuarta opción">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="correctAnswer">Respuesta Correcta:</label>
+                        <select id="correctAnswer" required>
+                            <option value="">Seleccione...</option>
+                            <option value="0">Opción 1</option>
+                            <option value="1">Opción 2</option>
+                            <option value="2">Opción 3</option>
+                            <option value="3">Opción 4</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="adminSubmitBtn" class="btn-primary">Crear Pregunta</button>
+                        <button type="button" onclick="resetAdminForm()" class="btn-secondary">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // ADMINISTRACIÓN DE PREGUNTAS
+        // ========================================
+
+        let allQuestions = [];
+
+        // Función para mostrar el formulario de nueva pregunta
+        function createNewQuestion() {
+            document.getElementById('adminFormTitle').textContent = 'Nueva Pregunta';
+            document.getElementById('adminSubmitBtn').textContent = 'Crear Pregunta';
+            document.getElementById('adminSubmitBtn').onclick = saveNewQuestion;
+            
+            document.getElementById('adminForm').reset();
+            document.getElementById('questionId').value = allQuestions.length > 0 ? Math.max(...allQuestions.map(q => q.id)) + 1 : 1;
+            
+            // Mostrar el formulario
+            document.getElementById('adminFormContainer').style.display = 'block';
+            document.getElementById('adminQuestionsContainer').style.display = 'none';
+        }
+
+        // Función para cargar las preguntas en la tabla de administración
+        function loadQuestionsToAdmin() {
+            const tbody = document.getElementById('adminQuestionsTable');
+            tbody.innerHTML = '';
+            
+            if (allQuestions.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: #666;">
+                            No hay preguntas disponibles. Crea la primera pregunta usando el botón "Nueva Pregunta".
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            allQuestions.forEach((question, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${question.id}</td>
+                    <td>${question.title}</td>
+                    <td>${question.question.length > 50 ? question.question.substring(0, 50) + '...' : question.question}</td>
+                    <td>${question.options.length} opciones</td>
+                    <td>${question.correctAnswer + 1}</td>
+                    <td>
+                        <button onclick="editQuestion(${index})" class="btn-edit" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button onclick="deleteQuestion(${index})" class="btn-delete" title="Eliminar">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            updateStats();
+        }
+
+        // Función para editar una pregunta
+        function editQuestion(index) {
+            const question = allQuestions[index];
+            
+            document.getElementById('questionId').value = question.id;
+            document.getElementById('questionTitle').value = question.title;
+            document.getElementById('questionText').value = question.question;
+            document.getElementById('option1').value = question.options[0];
+            document.getElementById('option2').value = question.options[1];
+            document.getElementById('option3').value = question.options[2];
+            document.getElementById('option4').value = question.options[3];
+            document.getElementById('correctAnswer').value = question.correctAnswer;
+            
+            document.getElementById('adminFormTitle').textContent = 'Editar Pregunta';
+            document.getElementById('adminSubmitBtn').textContent = 'Actualizar Pregunta';
+            document.getElementById('adminSubmitBtn').onclick = () => updateQuestion(index);
+            
+            // Mostrar el formulario
+            document.getElementById('adminFormContainer').style.display = 'block';
+            document.getElementById('adminQuestionsContainer').style.display = 'none';
+        }
+
+        // Función para actualizar una pregunta existente
+        function updateQuestion(index) {
+            const questionData = getQuestionFormData();
+            
+            if (validateQuestionForm(questionData)) {
+                allQuestions[index] = questionData;
+                saveQuestionsToLocalStorage();
+                showAdminMessage('Pregunta actualizada exitosamente', 'success');
+                loadQuestionsToAdmin();
+                resetAdminForm();
+            }
+        }
+
+        // Función para eliminar una pregunta
+        function deleteQuestion(index) {
+            if (confirm('¿Está seguro de que desea eliminar esta pregunta?')) {
+                allQuestions.splice(index, 1);
+                saveQuestionsToLocalStorage();
+                showAdminMessage('Pregunta eliminada exitosamente', 'success');
+                loadQuestionsToAdmin();
+            }
+        }
+
+        // Función para guardar una nueva pregunta
+        function saveNewQuestion() {
+            const questionData = getQuestionFormData();
+            
+            if (validateQuestionForm(questionData)) {
+                allQuestions.push(questionData);
+                saveQuestionsToLocalStorage();
+                showAdminMessage('Pregunta creada exitosamente', 'success');
+                loadQuestionsToAdmin();
+                resetAdminForm();
+            }
+        }
+
+        // Función para obtener los datos del formulario
+        function getQuestionFormData() {
+            return {
+                id: parseInt(document.getElementById('questionId').value),
+                title: document.getElementById('questionTitle').value,
+                question: document.getElementById('questionText').value,
+                options: [
+                    document.getElementById('option1').value,
+                    document.getElementById('option2').value,
+                    document.getElementById('option3').value,
+                    document.getElementById('option4').value
+                ],
+                correctAnswer: parseInt(document.getElementById('correctAnswer').value)
+            };
+        }
+
+        // Función para validar el formulario
+        function validateQuestionForm(data) {
+            if (!data.title.trim()) {
+                showAdminMessage('El título es obligatorio', 'error');
+                return false;
+            }
+            
+            if (!data.question.trim()) {
+                showAdminMessage('La pregunta es obligatoria', 'error');
+                return false;
+            }
+            
+            if (data.options.some(option => !option.trim())) {
+                showAdminMessage('Todas las opciones son obligatorias', 'error');
+                return false;
+            }
+            
+            if (data.correctAnswer < 0 || data.correctAnswer > 3) {
+                showAdminMessage('La respuesta correcta debe ser un número del 1 al 4', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Función para mostrar mensajes en el admin
+        function showAdminMessage(message, type) {
+            const messageElement = document.getElementById('adminMessage');
+            messageElement.textContent = message;
+            messageElement.className = `admin-message ${type}`;
+            messageElement.classList.remove('hidden');
+            
+            setTimeout(() => {
+                messageElement.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Función para resetear el formulario de admin
+        function resetAdminForm() {
+            document.getElementById('adminForm').reset();
+            document.getElementById('adminFormContainer').style.display = 'none';
+            document.getElementById('adminQuestionsContainer').style.display = 'block';
+        }
+
+        // Función para guardar preguntas en localStorage
+        function saveQuestionsToLocalStorage() {
+            localStorage.setItem('numiaQuestions', JSON.stringify(allQuestions));
+            console.log('💾 Preguntas guardadas en localStorage:', allQuestions);
+            updateStats();
+        }
+
+        // Función para cargar preguntas desde localStorage
+        function loadQuestionsFromLocalStorage() {
+            const saved = localStorage.getItem('numiaQuestions');
+            if (saved) {
+                try {
+                    allQuestions = JSON.parse(saved);
+                    console.log('📂 Preguntas cargadas desde localStorage:', allQuestions);
+                } catch (error) {
+                    console.error('Error al cargar preguntas:', error);
+                    allQuestions = [];
+                }
+            } else {
+                // Si no hay preguntas guardadas, cargar las preguntas por defecto
+                loadDefaultQuestions();
+            }
+            
+            loadQuestionsToAdmin();
+        }
+
+        // Función para cargar preguntas por defecto
+        function loadDefaultQuestions() {
+            allQuestions = [
+                {
+                    id: 1,
+                    title: "Percepción visual rápida",
+                    question: "¿Cuántos círculos azules hay en la imagen?",
+                    options: ["3", "4", "5", "6"],
+                    correctAnswer: 2
+                },
+                {
+                    id: 2,
+                    title: "Memoria de trabajo",
+                    question: "Recuerda esta secuencia: 7-2-9-1-4. ¿Cuál es el tercer número?",
+                    options: ["7", "2", "9", "1"],
+                    correctAnswer: 2
+                },
+                {
+                    id: 3,
+                    title: "Velocidad de procesamiento",
+                    question: "¿Cuánto tiempo tardas en identificar el patrón?",
+                    options: ["Menos de 2 segundos", "2-4 segundos", "4-6 segundos", "Más de 6 segundos"],
+                    correctAnswer: 1
+                },
+                {
+                    id: 4,
+                    title: "Atención sostenida",
+                    question: "¿Puedes mantener la atención en una tarea durante 10 minutos?",
+                    options: ["Siempre", "Frecuentemente", "A veces", "Raramente"],
+                    correctAnswer: 0
+                },
+                {
+                    id: 5,
+                    title: "Flexibilidad cognitiva",
+                    question: "¿Puedes cambiar rápidamente entre diferentes tareas?",
+                    options: ["Excelente", "Bueno", "Regular", "Necesita mejorar"],
+                    correctAnswer: 0
+                },
+                {
+                    id: 6,
+                    title: "Planificación",
+                    question: "¿Planificas tus actividades diarias con anticipación?",
+                    options: ["Siempre", "Frecuentemente", "A veces", "Nunca"],
+                    correctAnswer: 0
+                },
+                {
+                    id: 7,
+                    title: "Toma de decisiones",
+                    question: "¿Evalúas las consecuencias antes de tomar decisiones importantes?",
+                    options: ["Siempre", "Frecuentemente", "A veces", "Raramente"],
+                    correctAnswer: 0
+                },
+                {
+                    id: 8,
+                    title: "Control de impulsos",
+                    question: "¿Puedes esperar para obtener una recompensa mayor?",
+                    options: ["Siempre", "Frecuentemente", "A veces", "Nunca"],
+                    correctAnswer: 0
+                },
+                {
+                    id: 9,
+                    title: "Monitoreo de errores",
+                    question: "¿Revisas tu trabajo para detectar errores?",
+                    options: ["Siempre", "Frecuentemente", "A veces", "Raramente"],
+                    correctAnswer: 0
+                },
+                {
+                    id: 10,
+                    title: "Reconocimiento de señales",
+                    question: "¿Qué indica esta señal 🚫🚗?",
+                    options: ["Prohibido estacionar", "Prohibido circular", "Solo tránsito liviano", "Ceda el paso"],
+                    correctAnswer: 1
+                }
+            ];
+            
+            saveQuestionsToLocalStorage();
+            console.log('📚 Preguntas por defecto cargadas');
+        }
+
+        // Función para exportar preguntas a JSON
+        function exportQuestions() {
+            if (allQuestions.length === 0) {
+                showAdminMessage('No hay preguntas para exportar', 'error');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(allQuestions, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `preguntas_numia_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            showAdminMessage('Preguntas exportadas exitosamente', 'success');
+        }
+
+        // Función para importar preguntas desde JSON
+        function importQuestions() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const importedQuestions = JSON.parse(e.target.result);
+                            if (Array.isArray(importedQuestions) && importedQuestions.length > 0) {
+                                allQuestions = importedQuestions;
+                                saveQuestionsToLocalStorage();
+                                loadQuestionsToAdmin();
+                                showAdminMessage('Preguntas importadas exitosamente', 'success');
+                            } else {
+                                showAdminMessage('El archivo no contiene preguntas válidas', 'error');
+                            }
+                        } catch (error) {
+                            showAdminMessage('Error al leer el archivo JSON', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        // Función para actualizar estadísticas
+        function updateStats() {
+            document.getElementById('totalQuestions').textContent = allQuestions.length;
+            document.getElementById('activeQuestions').textContent = allQuestions.length;
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+        }
+
+        // Cargar preguntas al iniciar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadQuestionsFromLocalStorage();
+        });
+    </script>
+</body>
+</html>
+
