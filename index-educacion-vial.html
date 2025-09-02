@@ -13,6 +13,9 @@
     <!-- Flatpickr para selector de fechas -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
+    <!-- jsPDF para generar certificados PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -44,14 +47,20 @@
             width: 120px;
             height: 120px;
             margin: 0 auto 30px;
-            background: linear-gradient(135deg, #863DFF, #667eea);
+            background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 2rem;
-            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(134, 61, 255, 0.3);
+            padding: 10px;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
         }
 
         h1 {
@@ -1169,13 +1178,19 @@
 </head>
 <body>
             <div class="container">
-            <div class="logo">N</div>
+            <div class="logo">
+                <img src="images/numia.png" alt="Numia Logo">
+            </div>
             <h1>Educación Vial</h1>
             <p class="subtitle">Aprende sobre seguridad vial y obtén tu certificado</p>
             
             <!-- Navigation Buttons -->
             <div class="nav-buttons">
                 <a href="index.html" class="nav-btn">
+                    <i class="bi bi-house-fill"></i>
+                    Volver al Inicio
+                </a>
+                <a href="examen-psicologico.html" class="nav-btn">
                     <i class="bi bi-arrow-left"></i>
                     Volver a Evaluación
                 </a>
@@ -1556,9 +1571,18 @@
             if (modality === 'online') {
                 // Mostrar flujo online
                 setTimeout(() => {
+                    console.log('🎯 Mostrando flujo online...');
                     document.getElementById('modalitySelection').style.display = 'none';
                     document.getElementById('videoSection').style.display = 'block';
-                    document.querySelector('.video-watched-section').style.display = 'block';
+                    
+                    const videoWatchedSection = document.querySelector('.video-watched-section');
+                    console.log('📺 Video watched section encontrado:', videoWatchedSection);
+                    if (videoWatchedSection) {
+                        videoWatchedSection.classList.add('active');
+                        console.log('✅ Clase active agregada a video-watched-section');
+                    } else {
+                        console.log('❌ No se encontró video-watched-section');
+                    }
                 }, 500);
             } else if (modality === 'presencial') {
                 // Mostrar modal de test educación vial
@@ -1693,7 +1717,7 @@
             
             // Ocultar secciones de video y confirmación
             document.getElementById('videoSection').style.display = 'none';
-            document.querySelector('.video-watched-section').style.display = 'none';
+            document.querySelector('.video-watched-section').classList.remove('active');
             
             // Limpiar selección
             document.querySelectorAll('.modality-card').forEach(card => {
@@ -1719,6 +1743,9 @@
             currentQuestion = 0;
             userAnswers = [];
             score = 0;
+            
+            // Mostrar el contenedor de preguntas
+            document.getElementById('questionsContainer').classList.add('active');
             
             showQuestion();
         }
@@ -1823,6 +1850,10 @@
                         </div>
                     </div>
                     <div class="action-buttons">
+                        <button class="action-btn primary" onclick="generarCertificadoEducacionVial()">
+                            <i class="bi bi-download"></i>
+                            Descargar Certificado PDF
+                        </button>
                         <button class="action-btn secondary" onclick="showTelemedicineModal()">
                             <i class="bi bi-camera-video"></i>
                             Videollamada de Soporte
@@ -1861,7 +1892,7 @@
         // Inicializar la página
         window.onload = function() {
             // La sección de confirmación del video se mostrará solo cuando se seleccione modalidad online
-            document.querySelector('.video-watched-section').style.display = 'none';
+            document.querySelector('.video-watched-section').classList.remove('active');
         };
 
         // ========================================
@@ -2747,6 +2778,87 @@
             console.log('🔒 Cerrando modal biométrico...');
             document.getElementById('biometricModal').classList.remove('active');
             console.log('✅ Modal biométrico cerrado correctamente');
+        }
+
+        // Función para generar certificado PDF del curso de educación vial
+        function generarCertificadoEducacionVial() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Obtener datos del formulario (si están disponibles)
+            const nombre = document.getElementById('nombre')?.value || 'Usuario';
+            const apellido = document.getElementById('apellido')?.value || '';
+            const dni = document.getElementById('dni')?.value || '';
+            const fechaActual = new Date().toLocaleDateString('es-AR');
+            
+            // Obtener puntaje del examen
+            const puntaje = score || 0;
+            const totalPreguntas = selectedQuestions.length || 5;
+            const porcentaje = Math.round((puntaje / totalPreguntas) * 100);
+            
+            // Configurar fuente y colores
+            doc.setFontSize(20);
+            doc.setTextColor(102, 126, 234);
+            
+            // Título del certificado
+            doc.text('CERTIFICADO DE APROBACIÓN', 105, 30, { align: 'center' });
+            doc.text('CURSO DE EDUCACIÓN VIAL', 105, 40, { align: 'center' });
+            
+            // Logo o escudo (simulado con texto)
+            doc.setFontSize(16);
+            doc.setTextColor(0, 0, 0);
+            doc.text('🏛️', 105, 55, { align: 'center' });
+            doc.text('GOBIERNO DE LA CIUDAD AUTÓNOMA', 105, 65, { align: 'center' });
+            doc.text('DE BUENOS AIRES', 105, 75, { align: 'center' });
+            
+            // Línea separadora
+            doc.setDrawColor(102, 126, 234);
+            doc.setLineWidth(0.5);
+            doc.line(20, 85, 190, 85);
+            
+            // Contenido del certificado
+            doc.setFontSize(12);
+            doc.text('Por medio del presente certificado se hace constar que:', 20, 100);
+            
+            doc.setFontSize(14);
+            doc.text(`${nombre} ${apellido}`, 20, 120);
+            doc.text(`DNI: ${dni}`, 20, 130);
+            
+            doc.setFontSize(12);
+            doc.text('ha completado exitosamente el Curso de Educación Vial', 20, 150);
+            doc.text('requerido para la renovación de la Licencia de Conducir,', 20, 160);
+            doc.text('demostrando conocimientos adecuados en normas de tránsito', 20, 170);
+            doc.text('y seguridad vial.', 20, 180);
+            
+            // Resultados del examen
+            doc.text(`Puntaje obtenido: ${puntaje}/${totalPreguntas} (${porcentaje}%)`, 20, 200);
+            doc.text('Estado: APROBADO', 20, 210);
+            
+            // Fecha y validez
+            doc.text(`Fecha de emisión: ${fechaActual}`, 20, 230);
+            doc.text('Validez: 90 días desde la emisión', 20, 240);
+            
+            // Código de verificación
+            const codigoVerificacion = 'EDU-' + Date.now().toString().slice(-8);
+            doc.text(`Código de verificación: ${codigoVerificacion}`, 20, 260);
+            
+            // Firma y sello
+            doc.setFontSize(10);
+            doc.text('Este certificado es válido únicamente para los fines establecidos', 20, 280);
+            doc.text('por la normativa vigente del GCBA.', 20, 290);
+            
+            // Pie de página
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Secretaría de Transporte y Obras Públicas - GCBA', 105, 300, { align: 'center' });
+            doc.text('www.buenosaires.gob.ar', 105, 305, { align: 'center' });
+            
+            // Guardar el PDF
+            const nombreArchivo = `Certificado_EducacionVial_${nombre}_${apellido}_${fechaActual.replace(/\//g, '-')}.pdf`;
+            doc.save(nombreArchivo);
+            
+            // Mostrar mensaje de confirmación
+            alert('✅ Certificado PDF generado exitosamente');
         }
     </script>
 </body>
