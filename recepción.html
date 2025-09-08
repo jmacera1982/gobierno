@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recepción Especial - Administradores</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <div class="header">
+                <h1>Recepcion Especial. Correspondiente al viernes, 5 de septiembre de 2025</h1>
+                <h2>OPCION PARA ADMINISTRADORES</h2>
+                <div class="navigation">
+                    <a href="examen-medico.html" class="nav-link">Examen Médico</a>
+                    <a href="facturacion.html" class="nav-link">Facturación</a>
+                </div>
+            </div>
+
+            <form id="recepcionForm" class="form">
+                <!-- Sección de Identificación Personal -->
+                <div class="section">
+                    <h3>Identificación Personal</h3>
+                    <div class="form-group">
+                        <label for="tipoDocumento">Tipo y numero de documento:</label>
+                        <div class="document-group">
+                            <select id="tipoDocumento" name="tipoDocumento">
+                                <option value="DNI" selected>DNI</option>
+                                <option value="PASAPORTE">PASAPORTE</option>
+                                <option value="CEDULA">CÉDULA</option>
+                            </select>
+                            <input type="text" id="numeroDocumento" name="numeroDocumento" value="12345678" placeholder="Número de documento">
+                            <button type="button" id="buscarBtn" class="btn-buscar">Buscar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="apellido">Apellido:</label>
+                            <input type="text" id="apellido" name="apellido" value="AGUILERA" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" id="nombre" name="nombre" value="JOSE MARIA" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Lugar de Residencia -->
+                <div class="section">
+                    <h3>Lugar de residencia</h3>
+                    <div class="form-row">
+                        <div class="form-group small">
+                            <label for="numeroCalle">NC.:</label>
+                            <input type="text" id="numeroCalle" name="numeroCalle" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="calleNombre">Calle Nombre:</label>
+                            <input type="text" id="calleNombre" name="calleNombre" value="CALLE">
+                        </div>
+                        <div class="form-group small">
+                            <label for="altura">Altura.:</label>
+                            <input type="text" id="altura" name="altura" value="1324">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group small">
+                            <label for="piso">Piso:</label>
+                            <input type="text" id="piso" name="piso">
+                        </div>
+                        <div class="form-group small">
+                            <label for="departamento">Dp.:</label>
+                            <input type="text" id="departamento" name="departamento">
+                        </div>
+                        <div class="form-group">
+                            <label for="localidad">Localidad:</label>
+                            <input type="text" id="localidad" name="localidad" value="SAN MARTIN">
+                        </div>
+                        <div class="form-group small">
+                            <label for="codigoPostal">Cod. Postal:</label>
+                            <input type="text" id="codigoPostal" name="codigoPostal" value="1213">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Motivo e Información Adicional -->
+                <div class="section">
+                    <h3>Motivo e Información</h3>
+                    <div class="form-group">
+                        <label for="motivo">Seleccionar Motivo:</label>
+                        <input type="text" id="motivo" name="motivo" value="Vuelve a rendir teórica/prác" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="ultimoTurno">Última turno:</label>
+                        <input type="text" id="ultimoTurno" name="ultimoTurno" value="16/05/20" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="informacionAdicional">Información Adicional:</label>
+                        <textarea id="informacionAdicional" name="informacionAdicional" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <!-- Sección de Atención y Trámite -->
+                <div class="section">
+                    <h3>Detalles de Atención</h3>
+                    <div class="form-group">
+                        <label for="horaAtencion">Seleccionar Hora de atencion:</label>
+                        <div class="time-group">
+                            <input type="text" id="hora" name="hora" value="08" maxlength="2" placeholder="HH">
+                            <span>:</span>
+                            <input type="text" id="minutos" name="minutos" value="27" maxlength="2" placeholder="MM">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tramite">Tramite a realizar:</label>
+                            <select id="tramite" name="tramite">
+                                <option value="Ampliacíon" selected>Ampliacíon</option>
+                                <option value="Renovacion">Renovación</option>
+                                <option value="Duplicado">Duplicado</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoria">Categoria:</label>
+                            <select id="categoria" name="categoria">
+                                <option value="A-Mot-Tric-Cuatric-Clickon" selected>A- Mot. Tric. Cuatric. Clickon</option>
+                                <option value="B-Automovil">B- Automóvil</option>
+                                <option value="C-Camion">C- Camión</option>
+                                <option value="D-Omnibus">D- Ómnibus</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="anosSolicitado">Años solicitado (Estimativo):</label>
+                            <select id="anosSolicitado" name="anosSolicitado">
+                                <option value="5" selected>5</option>
+                                <option value="3">3</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Contacto -->
+                <div class="section">
+                    <h3>Contacto y Número de Trámite</h3>
+                    <div class="form-group">
+                        <label for="celular">Ratifique su número de Celular:</label>
+                        <p class="instruction">Ingrese solamente los 8 digitos</p>
+                        <input type="tel" id="celular" name="celular" maxlength="8" placeholder="12345678">
+                    </div>
+                    <div class="form-group">
+                        <label for="numeroTramite">Numero de tramite no asignado:</label>
+                        <input type="text" id="numeroTramite" name="numeroTramite" readonly>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="button-group">
+                    <button type="submit" id="recepcionarBtn" class="btn-primary">Recepcionar</button>
+                    <button type="button" id="limpiarBtn" class="btn-secondary">Limpiar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

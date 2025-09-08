@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facturación - Administradores</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <div class="header">
+                <h1>Facturacion. Correspondiente al viernes, 5 de septiembre de 2025</h1>
+                <div class="navigation">
+                    <a href="index.html" class="nav-link">← Recepción Especial</a>
+                    <a href="examen-medico.html" class="nav-link">Examen Médico</a>
+                </div>
+            </div>
+
+            <form id="facturacionForm" class="form">
+                <!-- Sección de Identificación Personal -->
+                <div class="section">
+                    <h3>Identificación Personal</h3>
+                    <div class="form-group">
+                        <label for="tipoDocumento">Tipo y numero de documento:</label>
+                        <div class="document-group">
+                            <select id="tipoDocumento" name="tipoDocumento">
+                                <option value="DNI" selected>DNI</option>
+                                <option value="PASAPORTE">PASAPORTE</option>
+                                <option value="CEDULA">CÉDULA</option>
+                            </select>
+                            <input type="text" id="numeroDocumento" name="numeroDocumento" value="12345678" placeholder="Número de documento">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="apellido">Apellido:</label>
+                            <input type="text" id="apellido" name="apellido" value="AGUILERA" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" id="nombre" name="nombre" value="JOSE MARIA" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Lugar de Residencia -->
+                <div class="section">
+                    <h3>Lugar de residencia</h3>
+                    <div class="address-table">
+                        <div class="address-row">
+                            <div class="address-cell">
+                                <label for="numeroCalle">NC.:</label>
+                                <input type="text" id="numeroCalle" name="numeroCalle" value="0">
+                            </div>
+                            <div class="address-cell">
+                                <label for="calleNombre">Calle Nombre:</label>
+                                <input type="text" id="calleNombre" name="calleNombre" value="CALLE">
+                            </div>
+                            <div class="address-cell">
+                                <label for="altura">Altura.:</label>
+                                <input type="text" id="altura" name="altura" value="1324">
+                            </div>
+                            <div class="address-cell">
+                                <label for="piso">Piso:</label>
+                                <input type="text" id="piso" name="piso">
+                            </div>
+                            <div class="address-cell">
+                                <label for="departamento">Dp.:</label>
+                                <input type="text" id="departamento" name="departamento">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="localidad">Localidad:</label>
+                            <input type="text" id="localidad" name="localidad" value="SAN MARTIN">
+                        </div>
+                        <div class="form-group">
+                            <label for="codigoPostal">Cod. Postal:</label>
+                            <input type="text" id="codigoPostal" name="codigoPostal" value="1213">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Detalles del Trámite y Facturación -->
+                <div class="section">
+                    <h3>Detalles del Trámite y Facturación</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tipoTramite">Tipo de tramite:</label>
+                            <select id="tipoTramite" name="tipoTramite">
+                                <option value="Ampliacion" selected>Ampliación</option>
+                                <option value="Renovacion">Renovación</option>
+                                <option value="Duplicado">Duplicado</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="anos">Años:</label>
+                            <select id="anos" name="anos">
+                                <option value="5" selected>5</option>
+                                <option value="3">3</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="categoriaFacturar">Categoria a facturar:</label>
+                            <select id="categoriaFacturar" name="categoriaFacturar">
+                                <option value="A-Mot-Tric-Cuatric-Clicion" selected>A-Mot. Tric. Cuatric. Clicion</option>
+                                <option value="B-Automovil">B- Automóvil</option>
+                                <option value="C-Camion">C- Camión</option>
+                                <option value="D-Omnibus">D- Ómnibus</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tipoFactura">Tipo de factura:</label>
+                            <select id="tipoFactura" name="tipoFactura">
+                                <option value="Comun" selected>Común</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="facturaSellados">Factura Sellados:</label>
+                            <div class="select-with-icon">
+                                <select id="facturaSellados" name="facturaSellados">
+                                    <option value="NO" selected>NO</option>
+                                    <option value="SI">SÍ</option>
+                                </select>
+                                <span class="search-icon">🔍</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Adjuntar Imagen -->
+                <div class="section">
+                    <h3>Adjuntar Documentación</h3>
+                    <div class="file-upload-section">
+                        <div class="file-upload-group">
+                            <label for="imagenArchivo">Adjuntar Imagen:</label>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="imagenArchivo" name="imagenArchivo" accept="image/*" style="display: none;">
+                                <button type="button" id="seleccionarArchivoBtn" class="btn-file">Seleccionar archivo</button>
+                                <span id="archivoSeleccionado" class="file-selected">Sin archivos seleccionados</span>
+                            </div>
+                        </div>
+                        <button type="button" id="subirImagenBtn" class="btn-upload">Subir imagen</button>
+                    </div>
+                    <div id="imagenSubida" class="image-uploaded" style="display: none;">
+                        <span>✓ Imagen subida correctamente</span>
+                    </div>
+                </div>
+
+                <!-- Sección de Importe Total -->
+                <div class="section billing-section">
+                    <h3>Importe Total</h3>
+                    <div class="billing-summary">
+                        <div class="total-amount">
+                            <span class="total-label">Importe Total:</span>
+                            <span class="total-value" id="importeTotal">$ 31.360,00</span>
+                        </div>
+                        
+                        <div class="billing-details">
+                            <div class="billing-item">
+                                <span class="item-label">Valor registro:</span>
+                                <span class="item-value" id="valorRegistro">$ 31.360,00</span>
+                            </div>
+                            <div class="billing-item">
+                                <span class="item-label">Derechos Oficina:</span>
+                                <span class="item-value" id="derechosOficina">$ 0,00</span>
+                            </div>
+                            <div class="billing-item">
+                                <span class="item-label">Sellado Provincia:</span>
+                                <span class="item-value" id="selladoProvincia">$ 0,00</span>
+                            </div>
+                            <div class="billing-item">
+                                <span class="item-label">Antecedentes Provincia:</span>
+                                <span class="item-value" id="antecedentesProvincia">$ 0,00</span>
+                            </div>
+                            <div class="billing-item">
+                                <span class="item-label">Antecedentes Nación:</span>
+                                <span class="item-value" id="antecedentesNacion">$ 0,00</span>
+                            </div>
+                            <div class="billing-item">
+                                <span class="item-label">Descuento:</span>
+                                <span class="item-value" id="descuento">$ 0,00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="button-group">
+                    <button type="button" id="nuevaLlamadaBtn" class="btn-info">Nueva Llamada</button>
+                    <button type="button" id="facturaBtn" class="btn-primary">Factura</button>
+                    <button type="button" id="procesarBtn" class="btn-success">Procesar</button>
+                    <button type="button" id="limpiarBtn" class="btn-secondary">Limpiar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="facturacion.js"></script>
+</body>
+</html>

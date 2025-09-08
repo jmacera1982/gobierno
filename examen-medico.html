@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Médico - Administradores</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <div class="header">
+                <h1>Examen Medico. Correspondiente al viernes, 5 de septiembre de 2025</h1>
+                <div class="navigation">
+                    <a href="index.html" class="nav-link">← Recepción Especial</a>
+                    <a href="facturacion.html" class="nav-link">Facturación</a>
+                </div>
+            </div>
+
+            <form id="examenMedicoForm" class="form">
+                <!-- Información del Puesto Médico -->
+                <div class="section">
+                    <h3>Información del Puesto Médico</h3>
+                    <div class="medical-post-info">
+                        <div class="post-header">
+                            <h4>MEDICO PUESTO 1</h4>
+                            <button type="button" id="actualizarBtn" class="btn-update">Actualizar</button>
+                        </div>
+                        <div class="tramite-info">
+                            <span class="tramite-label">Tramite Municipal</span>
+                            <span class="tramite-number">826688</span>
+                            <span class="primera-atencion">Primera atención</span>
+                        </div>
+                        <div class="document-info">
+                            <span class="doc-label">Documento</span>
+                            <span class="doc-value">DNI 12345678</span>
+                        </div>
+                        <div class="contributor-info">
+                            <span class="contributor-label">Contribuyente</span>
+                            <span class="contributor-value">AGUILERA, JOSE MARIA</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información Médica General -->
+                <div class="section">
+                    <h3>Información Médica General</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="grupoSanguineo">Grupo Sanguíneo:</label>
+                            <div class="blood-group">
+                                <select id="grupoSanguineo" name="grupoSanguineo">
+                                    <option value="0" selected>0</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="AB">AB</option>
+                                </select>
+                                <select id="factorRh" name="factorRh">
+                                    <option value="+" selected>+</option>
+                                    <option value="-">-</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="agudezaVisualOD">Ag. Visual OD:</label>
+                            <input type="text" id="agudezaVisualOD" name="agudezaVisualOD" placeholder="Ej: 20/20">
+                        </div>
+                        <div class="form-group">
+                            <label for="agudezaVisualOI">OI:</label>
+                            <input type="text" id="agudezaVisualOI" name="agudezaVisualOI" placeholder="Ej: 20/20">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resultados de Exámenes Específicos -->
+                <div class="section">
+                    <h3>Resultados de Exámenes</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="visionCromatica">Visión Cromática:</label>
+                            <select id="visionCromatica" name="visionCromatica">
+                                <option value="NO" selected>NO</option>
+                                <option value="SI">SÍ</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="agudezaAuditiva">Agudeza Auditiva:</label>
+                            <select id="agudezaAuditiva" name="agudezaAuditiva">
+                                <option value="SI" selected>SÍ</option>
+                                <option value="NO">NO</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="campoVisual">Campo Visual:</label>
+                            <select id="campoVisual" name="campoVisual">
+                                <option value="SI" selected>SÍ</option>
+                                <option value="NO">NO</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="examenClinico">Examen Clínico:</label>
+                            <select id="examenClinico" name="examenClinico">
+                                <option value="NO" selected>NO</option>
+                                <option value="SI">SÍ</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="psicodiagnostico">Psicodiagnóstico:</label>
+                            <select id="psicodiagnostico" name="psicodiagnostico">
+                                <option value="SI" selected>SÍ</option>
+                                <option value="NO">NO</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Checkboxes de Condiciones -->
+                <div class="section">
+                    <h3>Condiciones Especiales</h3>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="anteojos" name="anteojos">
+                            <label for="anteojos">Anteojos</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="audifono" name="audifono">
+                            <label for="audifono">Audífono</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cAdaptado" name="cAdaptado">
+                            <label for="cAdaptado">C.Adaptado</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="vMonocular" name="vMonocular">
+                            <label for="vMonocular">V.Monocular</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="lContacto" name="lContacto">
+                            <label for="lContacto">L.Contacto</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Renovación y Comentarios -->
+                <div class="section">
+                    <h3>Renovación y Comentarios</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="otorgaNuevoPlazo">Otorga Nuevo plazo:</label>
+                            <input type="text" id="otorgaNuevoPlazo" name="otorgaNuevoPlazo" placeholder="Especificar plazo">
+                        </div>
+                        <div class="form-group">
+                            <label for="otorgaAnos">Otorga años:</label>
+                            <select id="otorgaAnos" name="otorgaAnos">
+                                <option value="5" selected>5</option>
+                                <option value="3">3</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="1">1</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="comentario">Comentario:</label>
+                        <textarea id="comentario" name="comentario" rows="4" placeholder="Ingrese comentarios adicionales sobre el examen..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="button-group">
+                    <button type="button" id="aprobadoBtn" class="btn-success">Aprobado</button>
+                    <button type="button" id="noAprobadoBtn" class="btn-danger">No Aprobado</button>
+                    <button type="button" id="descartarBtn" class="btn-secondary">Descartar</button>
+                    <button type="button" id="llamarBtn" class="btn-info">Llamar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="examen-medico.js"></script>
+</body>
+</html>
